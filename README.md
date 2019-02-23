@@ -29,5 +29,10 @@ Yes! Here are links to PDF versions of my notes, which I created using Node's "m
 
 Interested in turning your own markdown files into PDFs? The wonderful tool [Pandoc]() can help! Check it out. I used it to generate the PDF and HTML versions of my notes, like so:
 
+# Building PDFs (with link color highlighting)
+
 `pandoc mydoc.md -t latex -o mydoc.pdf --variable urlcolor=cyan`
+
+# Building HTML documents
+
 `pandoc mydoc.md -t html -o mydoc.html`
