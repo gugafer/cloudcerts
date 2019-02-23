@@ -27,6 +27,7 @@ Yes! Here are links to PDF versions of my notes, which I created using Node's "m
 - Google Cloud Platform
     - Coming soon!
 
-Interested in turning your own markdown files into PDFs? You can easily install markdown-pdf using npm:
+Interested in turning your own markdown files into PDFs? The wonderful tool [Pandoc]() can help! Check it out. I used it to generate the PDF and HTML versions of my notes, like so:
 
-`npm install markdown-pdf`
+`pandoc mydoc.md -t latex -o mydoc.pdf --variable urlcolor=cyan`
+`pandoc mydoc.md -t html -o mydoc.html`
