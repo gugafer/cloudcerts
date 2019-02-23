@@ -1,6 +1,6 @@
 # What is this repository for? 
 
-It holds "cram" notes to help prepare for various cloud certifications. All my notes are based on the cloud certification courses at [acloud.guru](https://acloud.guru). I recommend you take a full course (like the ones at acloud.guru) before sitting any certification exams: my notes are very brief and are intended mostly to help you review. 
+It holds "cram" notes to help prepare for various cloud certifications. All my notes are based on the cloud certification courses at [acloud.guru](https://acloud.guru). I recommend you take a full course (like the ones at acloud.guru) before sitting any certification exams: my notes are very brief and are intended mostly to help you review.
 
 # How can I use these notes?
 
@@ -21,7 +21,7 @@ Yes! Here are links to PDF versions of my notes, which I created using Node's "m
 - Alibaba Cloud
     - Coming soon!
 - Amazon AWS:
-    - [AWS Developer Associate](https://s3.amazonaws.com/cloudcertnotes/aws_associate_notes.pdf)
+    - AWS Developer Associate in [PDF format](https://s3.amazonaws.com/cloudcertnotes/aws_associate_notes.pdf) and [HTML format](https://s3.amazonaws.com/cloudcertnotes/aws_certified_developer_associate.html)
 - Microsoft Azure:
     - Coming soon!
 - Google Cloud Platform

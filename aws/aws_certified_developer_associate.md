@@ -78,6 +78,28 @@ Important terms:
 - Remember as many of the AWS lambda triggers as you can
 - Remember you can use X-ray for debugging
 
+#### Lambda Triggers (as of February 2019)
+
+- Amazon S3
+- Amazon DynamoDB
+- Amazon Kinesis Data Streams
+- Amazon Simple Notification Service
+- Amazon Simple Email Service
+- Amazon Simple Queue Service
+- Amazon Cognito
+- AWS CloudFormation
+- Amazon CloudWatch Logs
+- Amazon CloudWatch Events
+- AWS CodeCommit
+- Scheduled Events (powered by Amazon CloudWatch Events)
+- AWS Config
+- Amazon Alexa
+- Amazon Lex
+- Amazon API Gateway
+- AWS IoT Button
+- Amazon CloudFront
+- Amazon Kinesis Data Firehose
+
 #### Lambda Version Control
 
 - You can have multiple versions of lambda functions
@@ -324,7 +346,7 @@ Add or updates data in the cache whenever data is written to the DB
 #### Advantages
 
 - Data in the cache is never stale
-- Users are more tolerant of additional data at write time (as compared to read time)
+- Users are more tolerant of additional delay at write time (as compared to read time)
 
 #### Disadvantages
 
@@ -506,7 +528,7 @@ Remember the 4 different deployment approaches and where they are used:
 - Immutable
     - Preferred option for mission critical production systems
     - Maintains full capacity
-    - To roll back, just delete the newly instances and their Auto Scaling group
+    - To roll back, just delete the newly created instances and their Auto Scaling group
 
 ### Configuring Elastic Beanstalk
 
@@ -543,7 +565,7 @@ Distributed message queueing system:
 - FIFO queues
 - Visibility timeout (default 30 seconds, maximum 12 hours)
 - Two polling types: 
-    - short-bolling (returns immediately even if no messages)
+    - short-polling (returns immediately even if no messages)
     - long-polling (waits until a message is in the queue or timeout period is reached)
 
 ### SNS
@@ -712,7 +734,7 @@ For Lambda, the AppSpec file may be written in YAML or JSON and contains the fol
 
 - Know what the AppSpec file does (defines deployment parameters)
 - The appspec.yml file must be placed in the root dir of your revision and must be written in YAML for EC2 / On-premise deployments (can be in JSON instead for Lambda)
-- Know the order of hooks in a CodeDeploy deployment
+- **Know the order of hooks in a CodeDeploy deployment!**
 
 ## Docker
 
@@ -810,19 +832,19 @@ For EC2/On-premises systems, the appspec.yml file must be placed in the root dir
 
 Try to remember the RUN ORDER of the hooks in the CodeDeploy deployment:
 
-Phase 1:
-    BeforeBlockTraffic -> Blcok Traffic -> AfterBlockTraffic
-Phase 2:
-    Application Stop
-    BeforeInstall
-    Install
-    Afterinstall
-    ApplicationStart
-    ValidateService
-Phase III:
-    ApplicationStart
-    ValidateService
-    BeforeAllowTraffic -> AllowTraffic -> AfterAllowTraffic
+- Phase 1:
+    - BeforeBlockTraffic -> Block Traffic -> AfterBlockTraffic
+- Phase 2:
+    - Application Stop
+    - BeforeInstall
+    - Install
+    - AfterInstall
+    - ApplicationStart
+    - ValidateService
+- Phase III:
+    - ApplicationStart
+    - ValidateService
+    - BeforeAllowTraffic -> AllowTraffic -> AfterAllowTraffic
 
 ### AWS CodePipeline Exam Tips:
 
@@ -839,7 +861,7 @@ A docker container includes everything the software needs to run including code,
 A Dockerfile specifies the instructions needed to assemble your docker image.
 
 There are some docker commands you should know to build, tag, and push images to an ECR repository:
-- `docker build -t myimagerepo .` (the . is pwd)
+- `docker build -t myimagerepo .`
 - `docker tag myimagerepo:latest <some tag>`
 - `docker push <image tag>`
 
@@ -1003,3 +1025,35 @@ Host level metrics are:
 - CloudWatch monitors performance (CPU, RAM, etc...)
 - CloudTrail monitors API calls (provisioning a new EC2 instance, new S3 bucket, tracks who-what-when)
 - AWS Config records the state of your AWS environment and can notify you of changes
+
+# Stuff I Got Wrong During Practice Exams
+
+## Monitoring and Troubleshooting
+
+- Lambda max execution time is 900 seconds
+- For questions about "sticky sessions" and storing the session data, choose *ElastiCache*
+- X-Ray works with ECS, Elastic Beanstalk, Lambda, EC2 (NOT S3)
+
+## Deployment
+
+- SQS queue maximum retention time: 14 days
+- Multi-part uploads are recommended for files over 100 MB
+- OrderDate would make a good sort key in DynamoDB (why? will make it easy to query later: sorts + queries are the job of the sort key)
+- If you need to roll back a lambda function, point the PROD alias to an older version of your function (you cannot change $LATEST)
+
+## Development with AWS Services
+
+- Elastic beanstalk supports Tomcat, Docker, and Passenger but **not JBoss**
+- appspec.yml goes in the root of your applicatoin source, **not the .ebextensions folder**
+- Session state can go in *DynamoDB* or *ElastiCache*: RDS and EC2 are poorer choices, and Lambda functions can't store data
+
+## Refactoring
+
+- RDS and ElastiCache are both OK places to store session state, but locally in memory or on EC2 are poor choices
+
+## Security
+
+- Cognito sign up and sign in is managed by **user pools**
+- CloudFront can force HTTPS by setting the **Viewer Protocol Policy**
+- When deploying w/ Elastic Beanstalk, you need to create a security group allowing access to your RDS DB and add it to the auto-scaling group: your app also needs to know the DB connection string
+- **Again: sign up and sign in for Cognito are handled by the user pool**
