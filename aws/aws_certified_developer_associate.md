@@ -28,7 +28,7 @@ There are 3 types of load balancers:
 - File sizes can be from 0 B up to 5 TB
 - Files are stored in *buckets* (like folders)
 - Universal namespace, with globally unique (and more recently DNS compliant names)
-- Consitency model is READ after WRITE for new PUTs
+- Consistency model is READ after WRITE for new PUTs
 - Overwrites/deletes are "eventually consistent" (DELETE is not immediate - this is important!)
 - Storage types: standard, IA, one-zone IA (20% less expensive than regular S3), Reduced Redudancy (no longer more cost effective than regular storage), Glacier (archive storage, long term)
 - Glacier access times are 3-5 hours (but new feature: can be accelerated!)
@@ -49,7 +49,7 @@ Important terms:
 
 - Origin (the site that hosts your content)
 - Edge Loction (a CDN node near your user)
-- Distribution (name given to the CDN - there are two types)"
+- Distribution (name given to the CDN - there are two types)
     - Web (static content acceleration)
     - RTMP (streaming video)
 - Can upload objects to edge locations (called "transfer acceleration")
@@ -125,18 +125,21 @@ Important terms:
 ### X-Ray
 
 The SDK provides:
+
 - Interceptors to add to your code to trace HTTP requests
 - Client handlers to instrument AWS SDK clients that your application uses to call other AWS services
 - An HTTP client to use to instrument calls to other internal and external HTTP web services
 
 X-Ray integrates with:
+
 - Elastic Load Balancer (ELB)
 - Lambda
-- API Gatewway
+- API Gateway
 - EC2
 - Elastic Beanstalk
 
 X-Ray supports these languages (same as Lambda):
+
 - Java
 - Go
 - Node.js
@@ -374,6 +377,7 @@ Add or updates data in the cache whenever data is written to the DB
 ### KMS Exam Tips
 
 Know these 4 API calls:
+
 - aws kms encrypt
 - aws kms decrypt
 - aws kms re-encrypt
@@ -452,6 +456,7 @@ An email service to help marketing teams and app developers send marketing, noti
 A service to process streaming data.
 
 Streaming data is generated continuously by thousands of data sources which send records simultaneously and in small sizes (KB-level). Think:
+
 - Stock prices
 - Purchases from online stores
 - Game data (as players play)
@@ -463,6 +468,7 @@ Streaming data is generated continuously by thousands of data sources which send
 Kinesis streams can store data from 24 hours up to 7 days (**24 hours is the default**).
 
 Data is stored in something called a "shard":
+
 - Consumers (EC2 instances, for instance) take the data from the shards and convert it into some end format
 - Consumers then store their final results somewhere else (Redshift, DynamoDB, etc...)
 
@@ -498,22 +504,26 @@ Basically, you give Elastic beanstalk a ZIP file with your code in it, and it pr
 ### Updating Elastic Beanstalk
 
 All-at-once deployment updates:
+
 - Deploys the new version to all instances simultaneously
 - All of your instances are out of service while the deployment takes place
-- You will experience an outage while the deployment is taking place - not ideal for mission-critical systems
+- You will experience an outage while the deployment is taking place: not ideal for mission-critical systems
 - If the update fails, you need to roll back the changes by re-deploying the original version to all your instances
 
 Rolling deployment policy:
+
 - Deploys the new version in batches
 - Each batch of instances is taken out of service while deployment takes place
-- Environment capacity reduced by the number of instances in a batch, while deployment takes place
+- Environment capacity is reduced by the number of instances in a batch, while deployment takes place
 - Not ideal for performance-sensitive systems
 - If the update fails, you need to perform an additional rolling update to roll back the changes
 
 Rolling with additional batch:
+
 - Same as above, but deploys an additional batch during deployment
 
 Immutable deployment updates:
+
 - Deploys the new version to a fresh group of instances in their own new Auto Scaling group
 - When new instances pass their health checks, they are moved to the existing auto scaling group, then old instances are terminated
 - Impact of a failed update is lower and rollback only requires terminating new instances
@@ -522,6 +532,7 @@ Immutable deployment updates:
 ### Exam tips
 
 Remember the 4 different deployment approaches and where they are used:
+
 - All at once
 - Rolling
 - Rolling with additional batch
@@ -537,6 +548,7 @@ You can use YAML or JSON to configure your Elastic Beanstalk environment. You ne
 ### Elastic Beanstalk with RDS
 
 There are two ways to integrate RDS with Elastic Beanstalk:
+
 1. Let EB directly launch RDS (great for dev and test)
 2. Manually configure RDS (better for production - RDS is decoupled from the application environment)
     - Can connect multiple environments to the same DB
@@ -560,6 +572,7 @@ If you have info like passwords, DB connection strings, license codes, etc... yo
 ### SQS
 
 Distributed message queueing system:
+
 - Pull based not push based
 - Standard queues
 - FIFO queues
@@ -569,6 +582,7 @@ Distributed message queueing system:
     - long-polling (waits until a message is in the queue or timeout period is reached)
 
 ### SNS
+
 - Scalable notification service
 - Pub/sub model (users subscribe to topics)
 - Push based rather than pull based
@@ -576,30 +590,34 @@ Distributed message queueing system:
 
 ### SES
 
-SES sends **emails only**. 
+SES sends **emails only**.
+
 - Can be used for incoming and outgoing mail
 - Is not subscription based: can send to any valid email address
 
 ### Kinesis
 
 Know the difference between:
+
 - Kinesis streams
     - Data streams
     - Video streams
 - Kinesis firehose
 
-Kinesis Analytics: analyze data as it comes in
+Note: **Kinesis Analytics** analyzes data as it comes in.
 
 Note: you can configure lambda to subscribe to Kinesis Streams to execute some action before sending data onwards.
 
 ### Elastic Beanstalk
 
 Automatically deploy and scale web apps. 
+
 - Support for PHP, Python, Ruby, Go, Docker, .NET, Node.js
 - App server platforms (Tomcat, Passenger, Puma, IIS)
 - Can fully manage EC2 instances yourself or let Elastic Beanstalk do it for you
 
 Remember update types:
+
 - All at once
 - Rolling
 - Rolling with additional batch
@@ -615,9 +633,10 @@ Remember update types:
 
 CI/CD = Continuous Integration / Continuous Deployment
 
-Lets you automate deployment and some aspects of testing, allowing frequent small changes to software to be tested and deployed very frequently into production.
+CI/CD lets you automate deployment and some aspects of testing, allowing frequent small changes to software to be tested and deployed very frequently into production.
 
 "CD" can mean:
+
 - Continuous Delivery
 - Continuous Deployment
 
@@ -692,6 +711,7 @@ New instances are provisioned and the latest revision is installed on the new in
 #### Exam Tips
 
 Remember the different types of deployment:
+
 - In place (rolling update)
 - Blue/Green
 
@@ -702,6 +722,7 @@ AWS CodePipeline can orchestrate the build, test, and deployment of your applica
 This speeds up testing, feature adding, and bug fixing for your developers.
 
 Integrates with:
+
 - CodeCommit
 - CodeBuild
 - CodeDeploy
@@ -726,6 +747,7 @@ Used to define the parameters that will be used for a CodeDeploy deployment.
 The file structure depends on whether you are deploying to Lambda or EC2 / On-premises.
 
 For Lambda, the AppSpec file may be written in YAML or JSON and contains the following fields:
+
 - version: reserved for future use, currently the only allowed version is 0.0
 - resources: the name and properties of the lambda function to deploy
 - hooks: specifies lambda functions to run at set points in the deployment lifecycle to validate the deployment e.g. validation tests to run before allowing traffic to be sent to your newly deployed instances
@@ -757,6 +779,7 @@ A service that allows you to provision AWS infrastructure as code.
 Resources are defined using a CloudFormation template (both YAML and JSON are supported).
 
 Benefits:
+
 - Configure infrastructure in a really consistent way
 - Less time and effort than configuring things manually
 - You can version control and peer review your templates
@@ -767,6 +790,7 @@ Benefits:
 #### CloudFormation Template Format
 
 Template parameters include:
+
 - AWSTemplateFormatVersion
     - This is the first line in your template
     - Only ONE supported value: "2010-09-09"
@@ -778,6 +802,7 @@ You can store reusable pieces of YAML and JSON code in S3, and can reuse them fr
 #### Stuff to remember
 
 Remember the main sections in the CloudFormation template:
+
 - Parameters: Input custom values
 - Conditions: Provision resources based on environment
 - Resources: AWS resources to create
@@ -789,6 +814,7 @@ Remember the main sections in the CloudFormation template:
 SAM = Serverless Application Model
 
 Has its own CLI interface called the SAM CLI. You get several commands:
+
 - sam package: takes a template (YAML) as input to package a deployment
 - sam deploy: takes the sam template and an IAM role, which allows CloudFormation to create an IAM role to allow the function to execute
 
@@ -804,25 +830,31 @@ You can store these common elements in their own CloudFormation templates, then 
 
 ### Developer Theory Summary
 
-CI/CD and related tools are worth a few exam points: read the AWS whitepaper on the subject
-    - [Developer Theory Whitepaper](https://d0.awsstatic.com/whitepapers/DevOps/practicing-continuous-integration-continuous-delivery-on-AWS.pdf)
-    - [Blue/Green deployment](https://d1.awsstatic.com/whitepapers/AWS_Blue_Green_Deployments.pdf)
+CI/CD and related tools are worth a few exam points: read the AWS whitepapers on the subject:
 
-CI is about automating the process of merging changes into a code base
-CD is about automating build, test, and deploy parts of the release lifecycle
+- [Developer Theory Whitepaper](https://d0.awsstatic.com/whitepapers/DevOps/practicing-continuous-integration-continuous-delivery-on-AWS.pdf)
+- [Blue/Green deployment](https://d1.awsstatic.com/whitepapers/AWS_Blue_Green_Deployments.pdf)
+
+Other things to know:
+
+- CI is about automating the process of merging changes into a code base
+- CD is about automating build, test, and deploy parts of the release lifecycle
 - Continuous Deployment fully automates the release process as well (as opposed to Continuous Delivery)
 
 AWS tools to know:
+
 - AWS CodeCommit
 - AWS CodeBuild
 - AWS CodeDeploy
 - AWS CodePipeline
 
 AWS CodeCommit:
+
 - Based on Git
 - Tracks and manages code changes
 
-AWS CodeDeploy: 
+AWS CodeDeploy:
+
 - Automated deployment of code (can be triggered by changes in CodeCommit)
 - Two deployment types: in-place (rolling update) or Blue/Green
 
@@ -861,8 +893,9 @@ A docker container includes everything the software needs to run including code,
 A Dockerfile specifies the instructions needed to assemble your docker image.
 
 There are some docker commands you should know to build, tag, and push images to an ECR repository:
+
 - `docker build -t myimagerepo .`
-- `docker tag myimagerepo:latest <some tag>`
+- `docker tag myimagerepo:latest <image tag>`
 - `docker push <image tag>`
 
 ### CodeBuild Exam Tips
@@ -880,6 +913,7 @@ If your build fails, check the build logs as they appear at the bottom of the Co
 You can allow sign-in and temporary access to AWS resources via Facebook, Google, or Amazon.
 
 Amazon Cognito service provides this type of identity federation, plus:
+
 - Access for guest users
 - Sign in and sign up
 - Acts as an identity broker between your application and web ID providers
@@ -901,6 +935,7 @@ SNS is used to send a silent push notification to all devices with a given user 
 ### Advanced IAM Policies
 
 There are 3 types of policies:
+
 - Managed policies
 - Customer managed policies
 - Inline policies
@@ -929,19 +964,20 @@ Cannot be attached to multiple users, groups, or roles.
 
 Typically Managed Policies are recommended, but in certain cases where you need to ensure a policy applies to **NO ONE ELSE** except a specific user/group, or role, then these are useful.
 
-### STS - AssumeRoleWithWebIdentity
+### STS:AssumeRoleWithWebIdentity
 
 This is what Cognito uses "under the hood" to authenticate clients who have already authenticated with a third party like Facebook, Google, or (of course) Amazon.
 
-Once these services provide a JWT token, STS can exchange the JWT token for an STS token using the `assumeRoleWithWebIdentity` API call. 
+Once these services provide a JWT token, STS can exchange the JWT token for an STS token using the `AssumeRoleWithWebIdentity` API call. 
 
-Typically for mobile applications, AWS recommends you use Cognito. However, you can also directly use STS     `assumeRoleWithWebIdentity` in regular web applications.
+Typically for mobile applications, AWS recommends you use Cognito. However, you can also directly use     `AssumeRoleWithWebIdentity` in regular web applications.
 
 ### Cross Account Access
 
-Let's you "switch role" from one account to another inside the AWS console, without logging out and logging back in (uses the "assume role" functionality).
+Lets you "switch role" from one account to another inside the AWS console, without logging out and logging back in (uses the "assume role" functionality).
 
 Steps:
+
 - Identify your account numbers
 - Create a group in IAM called "Dev"
 - Create a user in IAM called "Dev"
@@ -967,6 +1003,7 @@ Steps:
 - Cognito uses Push Synchronization to send a silent push notification of user data updates to multiple devices associated with a user ID
 
 Remember the 3 types of IAM policies:
+
 - Managed Policy
 - Customer Managed Policy
 - Inline Policy
@@ -976,6 +1013,7 @@ In most cases, AWS recommends using Managed Policies over Inline Policies
 ## CloudWatch
 
 Can monitor all kinds of things:
+
 - Storage gateway
 - CloudFront
 - DB and Analytics
@@ -983,12 +1021,13 @@ Can monitor all kinds of things:
 - EMR Job Flows
 - Redshift
 - SNS Topics
-- Opsworks
+- OpsWorks
 - Estimated charges on bills
 
 And more!
 
-What does CloudWatch monitor by default on EC2?:
+Things CloudWatch monitors by default on EC2:
+
 - CPU
 - Network
 - Disk
@@ -1000,7 +1039,7 @@ These are called "host level metrics".
 
 How long are CloudWatch metric stored? By default log data is stored *indefinitely*.
 
-You can retrieve data using 3rd party tools or the GetMetricStatistics API
+You can retrieve data using 3rd party tools or the `GetMetricStatistics` API
 
 Metric granularity *depends on the AWS service*. It could be 1 minute, 3 minutes, or 5 minutes depending on the service.
 
@@ -1008,13 +1047,14 @@ Custom metric *minimum granularity* is one minute.
 
 ### Alarms
 
-You can create alarms to monitor any CloudWatch metrics in your account. This can include EC2 CPU Utilization,Elastic Load Balancer Latency, or even charges on your AWS bill.
+You can create alarms to monitor any CloudWatch metrics in your account. This can include EC2 CPU Utilization, Elastic Load Balancer Latency, or even charges on your AWS bill.
 
 Note: CloudWatch **can be used on premises**: it is not limited to just AWS resources. There is a CloudWatch Agent + SSM Agent which you can download and install.
 
 ### Exam Tips
 
 Host level metrics are:
+
 - CPU
 - Network
 - Disk
@@ -1041,11 +1081,75 @@ Host level metrics are:
 - OrderDate would make a good sort key in DynamoDB (why? will make it easy to query later: sorts + queries are the job of the sort key)
 - If you need to roll back a lambda function, point the PROD alias to an older version of your function (you cannot change $LATEST)
 
+### CloudFormation
+
+#### Get the DNS name of a LoadBalancer using CloudFormation code
+
+`Fn::Join" : [ "", [ "http://", { "Fn::GetAtt" : [ "ElasticLoadBalancer", "DNSName" ]}]]`
+
+#### What will you see if your CloudFormation stack encounters an error?
+
+ROLLBACK_IN_PROGRESS
+
+#### When will a template NOT roll back?
+
+When there is invalid JSON syntax in the template.
+
+#### Choosing different instance types based on environment type
+
+This can be achieved in your CloudFormation template via:
+
+- Conditions
+- Mappings
+
+### CodeCommit
+
+To receive an email when changes are pushed, you must:
+
+- Configure notifications in the console (this auto-creates an SNS topic which triggers emails to be sent out)
+
 ## Development with AWS Services
 
-- Elastic beanstalk supports Tomcat, Docker, and Passenger but **not JBoss**
+- Elastic Beanstalk supports Tomcat, Docker, and Passenger but **not JBoss**
 - appspec.yml goes in the root of your applicatoin source, **not the .ebextensions folder**
 - Session state can go in *DynamoDB* or *ElastiCache*: RDS and EC2 are poorer choices, and Lambda functions can't store data
+
+### Kinesis
+
+Records a processed by consumers according to the **sequence number** assigned when items are written to the stream
+
+### Lambda
+
+**RDS is not an event source for Lambda!**
+
+### DynamoDB
+
+- You can list tables using `ListTables`
+- DynamoDB uses **optimistic concurrency control**
+- Items in a DynamoDB table can have an unlimited number of attributes
+
+- **DynamoDB Streams** allows you to capture a time-ordered sequence of modifications to items in a DynamoDB table over the past 24 hours
+
+### SQS
+
+The API can return a status code 400 for each of these errors:
+
+- MissingParameter
+- MissingAction
+
+#### Dealing with messages which are bigger than the SQS message maximum
+
+The way to handle this is to use the SQS Extended Client Library to send an SQS message which references a message body in S3.
+
+#### Billing
+
+Message size maximum is 256 KB but **messages are billed at 64 KB increments**.
+
+### SWF
+
+- EC2 instances can perform a worker task
+- A server living outside AWS can perform a worker task
+- Decision tasks occur when the state of the workflow changes
 
 ## Refactoring
 
@@ -1055,5 +1159,5 @@ Host level metrics are:
 
 - Cognito sign up and sign in is managed by **user pools**
 - CloudFront can force HTTPS by setting the **Viewer Protocol Policy**
-- When deploying w/ Elastic Beanstalk, you need to create a security group allowing access to your RDS DB and add it to the auto-scaling group: your app also needs to know the DB connection string
+- When deploying with Elastic Beanstalk, you need to create a security group allowing access to your RDS DB and add it to the auto-scaling group: your app also needs to know the DB connection string
 - **Again: sign up and sign in for Cognito are handled by the user pool**
