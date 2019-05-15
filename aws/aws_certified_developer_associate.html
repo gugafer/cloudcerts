@@ -1,0 +1,1034 @@
+<h1 id="certified-developer-associate-notes">Certified Developer Associate Notes</h1>
+<p>Welcome! The notes below should help you pass the AWS Developer Associate exam. These are my own course notes from the <a href="https://acloud.guru">acloud.guru</a> Developer Associate course.</p>
+<p>I assume you have already taken a full course like the one at acloud.guru and just need a refresher on the AWS products covered in the exam. If you haven't taken an AWS class yet then I highly recommend you go over to <a href="https://acloud.guru">acloud.guru</a> and sign up for one! Their classes are well worth the money, and the practice exams there will help you ensure you are ready to sit the exam.</p>
+<p>The notes below are grouped into categories by product or service. All the products mentioned here can (and will) show up on the exam.</p>
+<h2 id="elb">ELB</h2>
+<p>There are 3 types of load balancers: - application (layer 7) - network (layer 4) - classic (layer 4/7)</p>
+<ul>
+<li><p>A 504 error means the gateway has timed out</p></li>
+<li><p>If the EC2 instances behind your load balancer need to know the IPv4 addresses of your users, enable the X-Forwarded-For header in the ELB settings.</p></li>
+</ul>
+<h2 id="route-53">Route 53</h2>
+<ul>
+<li>Domains need a &quot;hosted zone&quot;</li>
+<li>Once a &quot;hosted zone&quot; is configured, you can set up DNS records (A, CNAME, etc..)</li>
+<li>One of Route 53's special features is the &quot;alias&quot; record type, which allows you to point at an AWS resource like an ELB or S3 bucket</li>
+</ul>
+<h2 id="s3">S3</h2>
+<ul>
+<li>File sizes can be from 0 B up to 5 TB</li>
+<li>Files are stored in <em>buckets</em> (like folders)</li>
+<li>Universal namespace, with globally unique (and more recently DNS compliant names)</li>
+<li>Consistency model is READ after WRITE for new PUTs</li>
+<li>Overwrites/deletes are &quot;eventually consistent&quot; (DELETE is not immediate - this is important!)</li>
+<li>Storage types: standard, IA, one-zone IA (20% less expensive than regular S3), Reduced Redudancy (no longer more cost effective than regular storage), Glacier (archive storage, long term)</li>
+<li>Glacier access times are 3-5 hours (but new feature: can be accelerated!)</li>
+<li>S3 supports several types of encryption:
+<ul>
+<li>SSE-S3 (AWS managed master key)</li>
+<li>SSE-KMS (KMS service managed key)</li>
+<li>SSE-C (client managed keys, the &quot;key material&quot; is provided by the customer)</li>
+</ul></li>
+<li>Client side encryption is also supported</li>
+<li>You can prevent unencrypted files from being uploaded using a bucket policy to force the x-amz-server-side-encryption flag to be set during upload requests</li>
+<li>CORS (Cross-Origin Resource Sharing): lets you access resources in Bucket A from a website or script that is hosted somewhere else (EC2, Bucket B)
+<ul>
+<li>When configuring CORS, always use the <em>buket website URL</em> not the regular bucket URL!</li>
+</ul></li>
+</ul>
+<h2 id="cloudfront">CloudFront</h2>
+<p>CloudFront is Amazon AWS's CDN.</p>
+<p>Important terms:</p>
+<ul>
+<li>Origin (the site that hosts your content)</li>
+<li>Edge Loction (a CDN node near your user)</li>
+<li>Distribution (name given to the CDN - there are two types)
+<ul>
+<li>Web (static content acceleration)</li>
+<li>RTMP (streaming video)</li>
+</ul></li>
+<li>Can upload objects to edge locations (called &quot;transfer acceleration&quot;)</li>
+<li>Can run code at edge locations via Lambda@Edge</li>
+<li>Randomizing object names (avoiding sequential key names) improves GET/PUT performance (but this is NO LONGER NEEDED as of 2018)
+<ul>
+<li>Originally this was to limit the possibility of I/O contention, but is no longer necessary: it may still come up on the exam</li>
+<li>When randomizing names, you add a random <strong>prefix</strong> not a random <strong>suffix</strong></li>
+</ul></li>
+</ul>
+<h2 id="aws-serverless-products-and-services">AWS Serverless Products and Services</h2>
+<h3 id="lambda">Lambda</h3>
+<ul>
+<li>Know which services are serverless</li>
+<li>Know what languages are supported
+<ul>
+<li>Java</li>
+<li>Go</li>
+<li>Node.js</li>
+<li>Python</li>
+<li>Ruby</li>
+<li>.NET</li>
+</ul></li>
+<li>Lambda scales out (not up) automatically</li>
+<li>Lambda functions are independent, 1 event = 1 function</li>
+<li>Lambda is serverless</li>
+<li>Lambda functions can trigger other lambda functions</li>
+<li>Lambda can do things globally (not just one region)</li>
+<li>Remember as many of the AWS lambda triggers as you can</li>
+<li>Remember you can use X-ray for debugging</li>
+</ul>
+<h4 id="lambda-triggers-as-of-february-2019">Lambda Triggers (as of February 2019)</h4>
+<ul>
+<li>Amazon S3</li>
+<li>Amazon DynamoDB</li>
+<li>Amazon Kinesis Data Streams</li>
+<li>Amazon Simple Notification Service</li>
+<li>Amazon Simple Email Service</li>
+<li>Amazon Simple Queue Service</li>
+<li>Amazon Cognito</li>
+<li>AWS CloudFormation</li>
+<li>Amazon CloudWatch Logs</li>
+<li>Amazon CloudWatch Events</li>
+<li>AWS CodeCommit</li>
+<li>Scheduled Events (powered by Amazon CloudWatch Events)</li>
+<li>AWS Config</li>
+<li>Amazon Alexa</li>
+<li>Amazon Lex</li>
+<li>Amazon API Gateway</li>
+<li>AWS IoT Button</li>
+<li>Amazon CloudFront</li>
+<li>Amazon Kinesis Data Firehose</li>
+</ul>
+<h4 id="lambda-version-control">Lambda Version Control</h4>
+<ul>
+<li>You can have multiple versions of lambda functions</li>
+<li><em>Qualified</em> versions will use <code>$LATEST</code> in the name, unqualified versions do not have this</li>
+<li>Can split traffic among different versions of a lambda function using aliases</li>
+<li>Cannot split traffic to $latest, instead create an alias for $latest</li>
+</ul>
+<h3 id="api-gateway">API Gateway</h3>
+<ul>
+<li>Remember what API Gateway <em>is</em> at a high level</li>
+<li>API Gateway has caching capabilities to increase performance</li>
+<li>Low cost, scales automatically</li>
+<li>Can throttle API calls to prevent attacks</li>
+<li>You can log results to CloudWatch</li>
+<li>If you are using Javascript/AJAX that uses multiple domains with API Gateway then you must enable CORS on API Gateway (remember CORS is <em>enforced by the client</em>)</li>
+</ul>
+<h3 id="step-functions">Step Functions</h3>
+<ul>
+<li>A great way to visualize your serverless application</li>
+<li>Step functions automatically trigger and track each step</li>
+<li>Step functions logs the state of each step so if something goes wrong you can track what went wrong and where</li>
+</ul>
+<h3 id="x-ray">X-Ray</h3>
+<p>The SDK provides:</p>
+<ul>
+<li>Interceptors to add to your code to trace HTTP requests</li>
+<li>Client handlers to instrument AWS SDK clients that your application uses to call other AWS services</li>
+<li>An HTTP client to use to instrument calls to other internal and external HTTP web services</li>
+</ul>
+<p>X-Ray integrates with:</p>
+<ul>
+<li>Elastic Load Balancer (ELB)</li>
+<li>Lambda</li>
+<li>API Gateway</li>
+<li>EC2</li>
+<li>Elastic Beanstalk</li>
+</ul>
+<p>X-Ray supports these languages (same as Lambda):</p>
+<ul>
+<li>Java</li>
+<li>Go</li>
+<li>Node.js</li>
+<li>Python</li>
+<li>Ruby</li>
+<li>.NET</li>
+</ul>
+<h2 id="dynamodb">DynamoDB</h2>
+<p>AWS's NoSQL Database.</p>
+<h3 id="local-secondary-index">Local secondary index</h3>
+<ul>
+<li>Can only be created when you are creating your table</li>
+<li>It has the same Partition Key as your original table (but a different sort key)</li>
+<li>Any queries based on this sort key are much faster using the index than the main table</li>
+</ul>
+<h3 id="global-secondary-index">Global Secondary Index</h3>
+<ul>
+<li>Can be created when you create your table, or you can add it later</li>
+<li>Can have a different partition key <em>as well as</em> a different sort key</li>
+</ul>
+<h3 id="exam-tips">Exam Tips</h3>
+<p>Indexes enable much faster queries, but only on specific columns.</p>
+<ul>
+<li>Local secondary can only be created when you create your table</li>
+<li>Global secondary can be created at table creation time or later</li>
+<li>Global can use a <em>different</em> partition key and sort key, local can only use a <em>different sort key</em></li>
+</ul>
+<h3 id="scan-vs-query-api">Scan vs Query API</h3>
+<h4 id="queries">Queries</h4>
+<ul>
+<li>Query results are always sorted by sort key in ascending order (numeric) or by ASCII character code values</li>
+<li>You can reverse the sort order using the &quot;ScanIndexForward&quot; parameter</li>
+<li>By default all queries are eventually consistent (you can force strong consistency by explicity setting this at query time)</li>
+</ul>
+<h4 id="scans">Scans</h4>
+<ul>
+<li>A scan operation examines every item in the table</li>
+<li>By default returns all data attributes</li>
+<li>Use the &quot;ProjectionExpression&quot; parameter to refine the scan to only return the attributes you want</li>
+</ul>
+<h4 id="query-or-scan">Query or Scan?</h4>
+<ul>
+<li>Query is much more efficient (scan dumps the entire table then filters output)</li>
+<li>Scan operation takes longer as the table grows in size</li>
+<li><p>A scan operation on a large table can use up the provisioned throughput for the table in just one operation!</p></li>
+<li><p>You can optimize scans and queries by setting a smaller page size which causes fewer read operations</p></li>
+<li><p>You can use parallel scans instead of sequential scans by logically dividing a table or index into segments and scanning each segment in parallel</p></li>
+</ul>
+<h3 id="dynamodb-provisioned-throughput">DynamoDB Provisioned Throughput</h3>
+<ul>
+<li>Measured in Capacity Units
+<ul>
+<li>1x Write Capacity Unit = 1x 1 KB write per second</li>
+<li>1x Read Capacity Unit = 1x Strongly Consistent read of 4 KB per second
+<ul>
+<li>OR, alternatively, 2x Eventually Consistent reads of 4 KB per second (<strong>this is the default</strong>)</li>
+</ul></li>
+</ul></li>
+</ul>
+<h4 id="provisioned-throughput-example">Provisioned Throughput Example</h4>
+<p>A DynamoDB table provisioned with 5x Read Capacity Units and 5x Write Capacity Units</p>
+<p>This configuration can perform: - 5x 4 KB strongly consistent reads = 20 KB per second (or 40 KB per second eventually consistent) - 5x 1 KB writes = 5 KB per second</p>
+<h3 id="dynamodb-on-demand-capacity">DynamoDB On-Demand Capacity</h3>
+<ul>
+<li>With on-demand, you don't need to specify your requirements</li>
+<li><p>Great for unpredictable workloads</p></li>
+<li><p>Can change between on-demand and provisioned capacity <em>once per day</em></p></li>
+</ul>
+<h3 id="dynamodb-accelerator-or-dax-is-a-fully-managed-clustered-in-memory-cache-for-dynamodb">DynamoDB Accelerator (or DAX) is a fully managed, clustered in-memory cache for DynamoDB</h3>
+<ul>
+<li>Delivers up to a 10x read performance improvement</li>
+<li>Microsecond performance for millions of requests per second</li>
+<li>Ideal for read-heavy and bursty workloads (gaming, auctions, black friday sales)</li>
+</ul>
+<h4 id="when-not-to-use-dax">When NOT to use DAX</h4>
+<ul>
+<li>Don't use for applications which require strongly consistent reads</li>
+<li>Write intensive applications</li>
+<li>Applications that don't perform many reads</li>
+<li>Applications that don't require microsecond response times</li>
+</ul>
+<h3 id="dynamodb-transactions">DynamoDB Transactions</h3>
+<ul>
+<li>ACID (atomic, consistent, isolated, durable)</li>
+<li>Read or write multiple items across multiple tables as an all-or-nothing operation</li>
+<li>Check for a prerequisite condition before writing to a table</li>
+</ul>
+<h3 id="dynamodb-ttl">DynamoDB TTL</h3>
+<ul>
+<li>TTL (time to live) defines an expiry time for your data</li>
+<li>Expired items marked for deletion (will delete within the next 48 hours)</li>
+<li>Great for removing irrelevant or old data:
+<ul>
+<li>Session data</li>
+<li>Event logs</li>
+<li>Temporary data</li>
+</ul></li>
+</ul>
+<h3 id="dynamodb-streams">DynamoDB Streams</h3>
+<ul>
+<li>Time-ordered sequence of item-level modifications (insert, update, delete)</li>
+<li>Logs are encrypted at rest and stored for 24 hours</li>
+<li>Accessed using a dedicated endpoint</li>
+<li>By default Primary Key is recorded</li>
+<li><p>Before and after images can be captured</p></li>
+<li><p>This is a good event source for lambda (as events are recorded in near real time)</p></li>
+</ul>
+<h3 id="exceeding-provisioned-throughput">Exceeding provisioned throughput</h3>
+<ul>
+<li>You will get a <em>ProvisionedThroughputExceededException</em></li>
+<li>If you are using the SDK, retries will be handled automatically</li>
+<li>If not, you can:
+<ul>
+<li>Reduce request frequency</li>
+<li>Use <em>exponential backoff</em></li>
+</ul></li>
+</ul>
+<h3 id="dynamodb-summary">DynamoDB Summary</h3>
+<ul>
+<li>Amazon DynamoDB is a low-latency NoSQL DB</li>
+<li>Consists of tables, items, and attributes</li>
+<li>Supports both document and key-value data models</li>
+<li>Supported document formats are JSON, HTML, XML</li>
+<li><p>2 types of primary keys: partition key and a combination of partition key + sort key (composite key)</p></li>
+<li>2 consistency models: strong / eventual consistency</li>
+<li>Access controlled using IAM policies</li>
+<li><p>Fine-grained access control using the IAM &quot;dynamodb:LeadingKeys&quot; parameter to allow users access only to items where the partition key value matches their user ID</p></li>
+<li><p>Remember local secondary index vs global secondary index</p></li>
+<li>Query operation finds items in a table using only the Primary Key attribute</li>
+<li>Scan examines every item in the table
+<ul>
+<li>By default returns all atributes</li>
+</ul></li>
+<li>Can use ProjectionExpression parameter to refine results (or &quot;filter&quot; in the console)</li>
+<li>Query ops are always sorted by the sort key <em>in ascending order</em>
+<ul>
+<li>Set <em>ScanIndexForward</em> to false to reverse sort order, and this is <strong>only for queries not scans</strong></li>
+</ul></li>
+<li>Reduce scan / query impact by:
+<ul>
+<li>Reducing page size (fewer read ops)</li>
+<li>Isolate scan operations to specific tables and segregate from misison-critical traffic</li>
+<li>Try parallel scans rather than default sequential scans</li>
+<li>Avoid scan operations whenever possible</li>
+</ul></li>
+<li>Throughput measured in Capacity Units
+<ul>
+<li>1 x write CU = 1 x 1 KB write per second</li>
+<li>1 x read CU = 1 x 4 KB strongly consistent read per second (or 2x 4 KB eventually consistent)</li>
+</ul></li>
+</ul>
+<h4 id="calculate-write-capacity-requirements">Calculate write capacity requirements</h4>
+<ol style="list-style-type: decimal">
+<li>(size of each item) / 1 KB (for write CU)</li>
+<li>Round up step 1 answer to next whole KB number</li>
+<li>Multiply step 2 by number of writes needed per second</li>
+</ol>
+<h4 id="calculate-read-capacity-requirements">Calculate read capacity requirements</h4>
+<ol style="list-style-type: decimal">
+<li>(size of each item) / 4 KB</li>
+<li>round up answer in step 1 to nearest whole number</li>
+<li>multiply by reads per second (for strong consistency)</li>
+<li>divide answer in step 3 <em>by two</em> if eventual consistency is OK</li>
+</ol>
+<h2 id="elasticache">Elasticache</h2>
+<p>In memory database caching.</p>
+<ul>
+<li>Good for read-heavy workloads</li>
+<li>Good for slow-changing data</li>
+</ul>
+<h3 id="types-memcached-and-redis">2 types (Memcached and Redis)</h3>
+<h4 id="memcached">Memcached</h4>
+<ul>
+<li>Multi-threaded</li>
+<li>No multi-AZ capability</li>
+<li>Widely adopted</li>
+</ul>
+<h4 id="redis">Redis</h4>
+<ul>
+<li>Open source in-memory key-value store</li>
+<li>Supports complex data structures: sorted sets and lists</li>
+<li>Supports master/slave replication and multi-AZ for cross-AZ redundancy</li>
+</ul>
+<h3 id="caching-strategies">Caching strategies</h3>
+<ul>
+<li>Lazy loading: return &quot;null&quot; if object is not available or expired, it is then the application's responsibility to fetch that item from the source and write it into the cache</li>
+</ul>
+<h4 id="advantages">Advantages</h4>
+<ul>
+<li>Only requested data is cached</li>
+<li>Node failures are not fatal (just a lot of cache misses if a node fails)</li>
+</ul>
+<h4 id="disadvantages">Disadvantages</h4>
+<ul>
+<li>Cache miss penalty on initial request</li>
+<li>Stale data: if data is only updated on a miss, data can become stale (no automatic updates)
+<ul>
+<li>Note: we can set a TLL (time to live) for cached data to help deal with this</li>
+</ul></li>
+</ul>
+<h3 id="write-through">Write Through</h3>
+<p>Add or updates data in the cache whenever data is written to the DB</p>
+<h4 id="advantages-1">Advantages</h4>
+<ul>
+<li>Data in the cache is never stale</li>
+<li>Users are more tolerant of additional delay at write time (as compared to read time)</li>
+</ul>
+<h4 id="disadvantages-1">Disadvantages</h4>
+<ul>
+<li>Write penalty: writes involve an extra step (write to cache)</li>
+<li>If a node fails, data is missing until added or updated in the database (mitigate by <em>also</em> implementing Lazy Loading in conjuction with write-through)</li>
+</ul>
+<h3 id="elasticache-exam-notes">Elasticache Exam Notes</h3>
+<ul>
+<li>In memory cache</li>
+<li>2 different caching strategies:
+<ul>
+<li>Lazy loading: cache data only when requested
+<ul>
+<li>Data can go stale</li>
+<li>Soft failure (failed cache node just means cache misses)</li>
+</ul></li>
+<li>Write through: writes data into cache whenever database changes
+<ul>
+<li>Write penalty at write time</li>
+<li>Data is missing from cache until added/updated in DB</li>
+<li>Wasted resources if most data is not accessed</li>
+</ul></li>
+</ul></li>
+</ul>
+<h2 id="kms">KMS</h2>
+<ul>
+<li>Encryption keys are managed through the IAM console</li>
+<li>You can generate keys in KMS or import your own &quot;key material&quot;</li>
+<li>Best practice is to have one user who manages the key(s) and one user who can encrypt/decrypt using the key(s): this should not be the same person</li>
+</ul>
+<h3 id="kms-exam-tips">KMS Exam Tips</h3>
+<p>Know these 4 API calls:</p>
+<ul>
+<li>aws kms encrypt</li>
+<li>aws kms decrypt</li>
+<li>aws kms re-encrypt</li>
+<li>aws kms enable-key-rotation</li>
+</ul>
+<h3 id="kms-envelope-encryption">KMS Envelope Encryption</h3>
+<p>Evenlope encryption is the process of encrypting your envelope key (your data key).</p>
+<p>Customer Master Key -&gt; decrypt the data key (envelope key) -&gt; envelope key decrypts your data</p>
+<p>Keys in KMS can <em>never</em> be exported. Keys in CloudHSM <em>can</em>. Note, CloudHSM is <strong>dedicated HSM hardware</strong>.</p>
+<h2 id="sqs">SQS</h2>
+<p>A messaging queue service. A way to decouple services from one another.</p>
+<h3 id="an-example">An Example</h3>
+<p>Imagine a meme generator:</p>
+<ul>
+<li>User uploads image to S3</li>
+<li>Triggers a lambda function that creates an SQS job containing (image URL, top meme text, bottom meme text)</li>
+<li>EC2 instances read jobs from the SQS queue, generate memes, and save them back to S3</li>
+</ul>
+<p>This way if an EC2 instance dies, things keep working because SQS decouples the jobs to be done (meme data) from the instances performing them (in EC2).</p>
+<p>Exam note: <strong>SQS is always a pull-based system</strong></p>
+<p>SQS can also provide some elasticity: jobs can wait in the queue if the workers pulling from the queue are not processing work fast enough. Auto Scaling can also be configured to increase the number of workers as the queue begins to fill up.</p>
+<h3 id="sqs-queue-types">SQS Queue Types</h3>
+<ul>
+<li>Standard queues:
+<ul>
+<li>Default type</li>
+<li>Messages may be delivered out-of-order (&quot;best effort&quot; in-order delivery)</li>
+<li>A message may be delivered more than once</li>
+</ul></li>
+<li>FIFO queues:
+<ul>
+<li>First in, first out (guaranteed delivery order)</li>
+<li>Messages always delivered once, and messages are available until processed and deleted by a worker</li>
+<li>Limited to 300 transactions per second</li>
+</ul></li>
+</ul>
+<h3 id="important-sqs-notes">Important SQS Notes</h3>
+<ul>
+<li>Message sizes can be up to 256 KB</li>
+<li>Can be queued from 1 minute to 14 days</li>
+<li>SQS guarantees messages are processed at least once</li>
+<li>Invisibility timeout: length of time a message is invisible after a worker pulls it
+<ul>
+<li>Maximum invisibility timeout is 12 hours</li>
+</ul></li>
+</ul>
+<h2 id="sns">SNS</h2>
+<ul>
+<li><p>A push-based notification services. Can send out push notifications to Apple, Google, Fire OS, Windows, etc... (even compatible with Baidu Cloud Push).</p></li>
+<li><p>Can deliver notifications via email, SMS text messages, SQS queues, or an HTTP endpoint</p></li>
+<li><p>Lambda functions can subscribe to SNS functions and will be triggered when an SNS push is sent out</p></li>
+<li><p>SNS delivers appropriately formatted copies of your message to each subscriber, even for different tech types (i.e. you have iOS, Android, Lambda, and more all subscribed to the same topic)</p></li>
+<li><p>Instantaneous push-based delivery (no polling)</p></li>
+</ul>
+<h2 id="ses-simple-email-service">SES (Simple Email Service)</h2>
+<p>An email service to help marketing teams and app developers send marketing, notification, and transactional emails to customers using a Pay-As-You-Go model.</p>
+<ul>
+<li>Can also be used to receive emails, which can be delivered to an S3 bucket</li>
+<li><p>Incoming mail can trigger SNS notifications</p></li>
+<li>Compare w/ SNS: many formats supported by SNS, SNS can fan out messages to large numbers of recipients, etc...</li>
+<li><p>Key difference w/ SNS: SES is <em>NOT</em> subscription based, you can send to <em>anybody</em></p></li>
+</ul>
+<h2 id="kinesis">Kinesis</h2>
+<p>A service to process streaming data.</p>
+<p>Streaming data is generated continuously by thousands of data sources which send records simultaneously and in small sizes (KB-level). Think:</p>
+<ul>
+<li>Stock prices</li>
+<li>Purchases from online stores</li>
+<li>Game data (as players play)</li>
+<li>Social network data</li>
+<li>Geospacial data (GPS datapoints)</li>
+</ul>
+<h3 id="kinesis-streams">Kinesis Streams</h3>
+<p>Kinesis streams can store data from 24 hours up to 7 days (<strong>24 hours is the default</strong>).</p>
+<p>Data is stored in something called a &quot;shard&quot;:</p>
+<ul>
+<li>Consumers (EC2 instances, for instance) take the data from the shards and convert it into some end format</li>
+<li>Consumers then store their final results somewhere else (Redshift, DynamoDB, etc...)</li>
+</ul>
+<p>Shards: - 5 transactions per second for reads - Maximum total data read rate of 2 MB per second and 1,000 records per second for writes, with a maximum total write rate of 1 MB per second - The data capacity of your stream is a function of the number of shards specified for the stream</p>
+<h3 id="kinesis-firehose">Kinesis Firehose</h3>
+<ul>
+<li>Producers send data to Firehose</li>
+<li>Firehose doesn't make you worry about shards/streams (automated!)</li>
+<li>Firehose lets you analyze data using Lambda in real time</li>
+<li>Data can be stored into S3</li>
+</ul>
+<p>Firehose has no automatic data retention window (because you store data directly to S3)</p>
+<h3 id="kinesis-analytics">Kinesis Analytics</h3>
+<p>Allows you to run SQL queries on your data as it exists inside Firehose or Streams, and you can then store results into S3, Redshift, or Elasticsearch Cluster</p>
+<h3 id="exam-tips-1">Exam tips</h3>
+<ul>
+<li>Know firehose / streams key differences</li>
+<li>Understand what Kinesis Analytics is</li>
+</ul>
+<h2 id="elastic-beanstalk">Elastic Beanstalk</h2>
+<p>A service for deploying and scaling web applications written in many languages (Java, .NET, PHP, NodeJS, and more) and deploying onto popular application platforms like Apache Tomcat, NGINX, Passenger, and IIS.</p>
+<p>Basically, you give Elastic beanstalk a ZIP file with your code in it, and it provisions the necessary resources for you (it auto-detects them).</p>
+<h3 id="updating-elastic-beanstalk">Updating Elastic Beanstalk</h3>
+<p>All-at-once deployment updates:</p>
+<ul>
+<li>Deploys the new version to all instances simultaneously</li>
+<li>All of your instances are out of service while the deployment takes place</li>
+<li>You will experience an outage while the deployment is taking place: not ideal for mission-critical systems</li>
+<li>If the update fails, you need to roll back the changes by re-deploying the original version to all your instances</li>
+</ul>
+<p>Rolling deployment policy:</p>
+<ul>
+<li>Deploys the new version in batches</li>
+<li>Each batch of instances is taken out of service while deployment takes place</li>
+<li>Environment capacity is reduced by the number of instances in a batch, while deployment takes place</li>
+<li>Not ideal for performance-sensitive systems</li>
+<li>If the update fails, you need to perform an additional rolling update to roll back the changes</li>
+</ul>
+<p>Rolling with additional batch:</p>
+<ul>
+<li>Same as above, but deploys an additional batch during deployment</li>
+</ul>
+<p>Immutable deployment updates:</p>
+<ul>
+<li>Deploys the new version to a fresh group of instances in their own new Auto Scaling group</li>
+<li>When new instances pass their health checks, they are moved to the existing auto scaling group, then old instances are terminated</li>
+<li>Impact of a failed update is lower and rollback only requires terminating new instances</li>
+<li>Preferred option for mission-critical applications</li>
+</ul>
+<h3 id="exam-tips-2">Exam tips</h3>
+<p>Remember the 4 different deployment approaches and where they are used:</p>
+<ul>
+<li>All at once</li>
+<li>Rolling</li>
+<li>Rolling with additional batch</li>
+<li>Immutable
+<ul>
+<li>Preferred option for mission critical production systems</li>
+<li>Maintains full capacity</li>
+<li>To roll back, just delete the newly created instances and their Auto Scaling group</li>
+</ul></li>
+</ul>
+<h3 id="configuring-elastic-beanstalk">Configuring Elastic Beanstalk</h3>
+<p>You can use YAML or JSON to configure your Elastic Beanstalk environment. You need to save your configuration in a file with the extension .config and the file(s) must be stored in a directory called .ebextensions in the top level directory of your application.</p>
+<h3 id="elastic-beanstalk-with-rds">Elastic Beanstalk with RDS</h3>
+<p>There are two ways to integrate RDS with Elastic Beanstalk:</p>
+<ol style="list-style-type: decimal">
+<li>Let EB directly launch RDS (great for dev and test)</li>
+<li>Manually configure RDS (better for production - RDS is decoupled from the application environment)
+<ul>
+<li>Can connect multiple environments to the same DB</li>
+<li>Provides a wider choice of database types</li>
+<li>Allows you to remove application environments without affecting your RDS instance</li>
+</ul></li>
+</ol>
+<p>How do you manually configure RDS and EB to work together? - An additional security group must be added to the environment's Auto Scaling group - You need to provide connection info (url, username, pass) as EB environment variables</p>
+<h2 id="aws-systems-manager">AWS Systems Manager</h2>
+<p>If you have info like passwords, DB connection strings, license codes, etc... you can store this in SSM (systems manager) Parameter Store.</p>
+<ul>
+<li>You can store values as plaintext or encrypted</li>
+<li>You can reference values using their names</li>
+<li>You can use this service with EC2, CLoudFormation, Lambda, EC2 Run Command etc...</li>
+</ul>
+<h2 id="other-aws-services-summary">Other AWS Services (Summary)</h2>
+<h3 id="sqs-1">SQS</h3>
+<p>Distributed message queueing system:</p>
+<ul>
+<li>Pull based not push based</li>
+<li>Standard queues</li>
+<li>FIFO queues</li>
+<li>Visibility timeout (default 30 seconds, maximum 12 hours)</li>
+<li>Two polling types:
+<ul>
+<li>short-polling (returns immediately even if no messages)</li>
+<li>long-polling (waits until a message is in the queue or timeout period is reached)</li>
+</ul></li>
+</ul>
+<h3 id="sns-1">SNS</h3>
+<ul>
+<li>Scalable notification service</li>
+<li>Pub/sub model (users subscribe to topics)</li>
+<li>Push based rather than pull based</li>
+<li>Can send notifications to multiple people (can do <em>fan-out</em>)</li>
+</ul>
+<h3 id="ses">SES</h3>
+<p>SES sends <strong>emails only</strong>.</p>
+<ul>
+<li>Can be used for incoming and outgoing mail</li>
+<li>Is not subscription based: can send to any valid email address</li>
+</ul>
+<h3 id="kinesis-1">Kinesis</h3>
+<p>Know the difference between:</p>
+<ul>
+<li>Kinesis streams
+<ul>
+<li>Data streams</li>
+<li>Video streams</li>
+</ul></li>
+<li>Kinesis firehose</li>
+</ul>
+<p>Note: <strong>Kinesis Analytics</strong> analyzes data as it comes in.</p>
+<p>Note: you can configure lambda to subscribe to Kinesis Streams to execute some action before sending data onwards.</p>
+<h3 id="elastic-beanstalk-1">Elastic Beanstalk</h3>
+<p>Automatically deploy and scale web apps.</p>
+<ul>
+<li>Support for PHP, Python, Ruby, Go, Docker, .NET, Node.js</li>
+<li>App server platforms (Tomcat, Passenger, Puma, IIS)</li>
+<li>Can fully manage EC2 instances yourself or let Elastic Beanstalk do it for you</li>
+</ul>
+<p>Remember update types:</p>
+<ul>
+<li>All at once</li>
+<li>Rolling</li>
+<li>Rolling with additional batch</li>
+<li>Immutable</li>
+</ul>
+<h3 id="advanced-elastic-beanstalk-tips">Advanced Elastic Beanstalk Tips</h3>
+<ul>
+<li>You can customize your EB environment by adding config files written in YAML or JSON</li>
+<li>Files must have a .config extension</li>
+<li>Files must be saved in an .ebextensions folder at the top-level-directory that holds your application code</li>
+</ul>
+<h2 id="cicd">CI/CD</h2>
+<p>CI/CD = Continuous Integration / Continuous Deployment</p>
+<p>CI/CD lets you automate deployment and some aspects of testing, allowing frequent small changes to software to be tested and deployed very frequently into production.</p>
+<p>&quot;CD&quot; can mean:</p>
+<ul>
+<li>Continuous Delivery</li>
+<li>Continuous Deployment</li>
+</ul>
+<p>The difference is that in <em>continuous delivery</em>, after testing takes place the decision whether or not to deploy is made manually (by a human). In <em>continuous deployment</em>, the deployment step is also automated.</p>
+<ul>
+<li>AWS CodeCommit
+<ul>
+<li>AWS code repository service (private git repository)</li>
+</ul></li>
+<li>AWS CodeBuild
+<ul>
+<li>Managed build service</li>
+</ul></li>
+<li>AWS CodeDeploy
+<ul>
+<li>Can deploy your code to EC2 instances, lambda functions, and even your on-premise servers</li>
+</ul></li>
+<li>AWS CodePipeline
+<ul>
+<li>Orchestrate the above 3 activities to fully automate the release of new software</li>
+</ul></li>
+</ul>
+<h3 id="exam-tips-3">Exam Tips</h3>
+<p>Read the AWS <a href="https://d0.awsstatic.com/whitepapers/DevOps/practicing-continuous-integration-continuous-delivery-on-AWS.pdf">whitepaper on DevOps best practices</a>!!! It might also be a good idea to AWS's <a href="https://d1.awsstatic.com/whitepapers/AWS_Blue_Green_Deployments.pdf">whitepaper on blue/green deployments</a>.</p>
+<ul>
+<li>CI is about integrating or merging code changes frequently
+<ul>
+<li>At least once per day</li>
+<li>Enables multiple developers to work on the same application</li>
+</ul></li>
+<li>Continuous Delivery is about automating build, test, and deployment (but human intervention is needed to deploy into your environment)</li>
+<li>Continuous Deployment is Continuous Delivery + automated deployment</li>
+</ul>
+<h3 id="aws-codecommit">AWS CodeCommit</h3>
+<ul>
+<li>Users create a copy (known as a branch) of the master repository, which they update independently without impacting other users</li>
+<li>Saved code changes which are ready to be applied to a repository are known as a &quot;commit&quot;</li>
+<li>When the updated code located in a branch is ready to be added to the master repository, the branch is <strong>merged</strong> into the master repository</li>
+<li>AWS CodeCommit provides all the functionality of Git</li>
+</ul>
+<h4 id="other-cool-stuff">Other cool stuff</h4>
+<p>You can set up CloudWatch event rules to notify you (or other people) when changes (such as a pull request) take place in CodeCommit</p>
+<h3 id="codedeploy">CodeDeploy</h3>
+<p>An automated deployment service which lets you automatically deploy code to EC2, Lambda Functions, or even on-premise systems.</p>
+<ul>
+<li>Scales with your infrastructure</li>
+<li>Integrates with CI/CD tools (Jenkins, Github, Atlassian, AWS CodePipeline)</li>
+</ul>
+<p>Two deployment approaches: - In-place - Blue/Green</p>
+<h4 id="in-place">In-place</h4>
+<p>Application is stopped on each instance in turn, and the latest revision is installed</p>
+<p>If the instances are behind a load balancer, you can stop sending requests to instances being upgraded, and start sending requests again once the instance is updated</p>
+<p>Note: this is <em>not supported for lambda</em></p>
+<h4 id="bluegreen">Blue/Green</h4>
+<p>New instances are provisioned and the latest revision is installed on the new instances. Blue represents the active deployment, green is the new release.</p>
+<ul>
+<li>Switching back to the original environment is instantaneous</li>
+<li>Switching over to the new environment is also very fast (just route your load balancer to the new machines, release the original ones)</li>
+<li>No reduction in performance or capacity</li>
+</ul>
+<h4 id="terms-to-know">Terms to know</h4>
+<ul>
+<li>Deployment Group</li>
+<li>Deployment</li>
+<li>Deployment Configuration</li>
+<li>AppSpec File</li>
+<li>Revision</li>
+<li>Application</li>
+</ul>
+<h4 id="exam-tips-4">Exam Tips</h4>
+<p>Remember the different types of deployment:</p>
+<ul>
+<li>In place (rolling update)</li>
+<li>Blue/Green</li>
+</ul>
+<h3 id="codepipeline-101">CodePipeline 101</h3>
+<p>AWS CodePipeline can orchestrate the build, test, and deployment of your application.</p>
+<p>This speeds up testing, feature adding, and bug fixing for your developers.</p>
+<p>Integrates with:</p>
+<ul>
+<li>CodeCommit</li>
+<li>CodeBuild</li>
+<li>CodeDeploy</li>
+<li>Lambda</li>
+<li>Elastic Beanstalk</li>
+<li>CloudFormation</li>
+<li>Elastic Container Service</li>
+<li>Outside tools like GitHub and Jenkins</li>
+</ul>
+<p>Each time you update your code, the pipeline is triggered. A failure at any stage results in stopping / a rollback, making failures easier to detect and fix.</p>
+<h4 id="exam-tips-5">Exam Tips</h4>
+<ul>
+<li>Automates your end-to-end software release process</li>
+<li>Can automatically trigger your pipeline as soon as a change is detected in your source code repository</li>
+<li>Integrates with services like CodeBuild and CodeDeploy as well as other services (GitHub, Jenkins, etc...)</li>
+</ul>
+<h4 id="the-appspec-file">The AppSpec File</h4>
+<p>Used to define the parameters that will be used for a CodeDeploy deployment.</p>
+<p>The file structure depends on whether you are deploying to Lambda or EC2 / On-premises.</p>
+<p>For Lambda, the AppSpec file may be written in YAML or JSON and contains the following fields:</p>
+<ul>
+<li>version: reserved for future use, currently the only allowed version is 0.0</li>
+<li>resources: the name and properties of the lambda function to deploy</li>
+<li>hooks: specifies lambda functions to run at set points in the deployment lifecycle to validate the deployment e.g. validation tests to run before allowing traffic to be sent to your newly deployed instances</li>
+</ul>
+<h4 id="exam-tips-6">Exam tips</h4>
+<ul>
+<li>Know what the AppSpec file does (defines deployment parameters)</li>
+<li>The appspec.yml file must be placed in the root dir of your revision and must be written in YAML for EC2 / On-premise deployments (can be in JSON instead for Lambda)</li>
+<li><strong>Know the order of hooks in a CodeDeploy deployment!</strong></li>
+</ul>
+<h2 id="docker">Docker</h2>
+<p>An open source technology for creating applications based on Windows or Linux &quot;containers&quot;</p>
+<p>A container is a lightweight standalone executable package containing all the stuff your software needs to run: the runtime environment, supporting tools, configuration etc...</p>
+<p>Amazon Elastic Container Service (ECS) lets you run Docker containers on AWS.</p>
+<h4 id="exam-tips-7">Exam Tips</h4>
+<p>Understand the build, tag, and push commands (docker) to put our docker image into our docker repository.</p>
+<p>You can put your own build commands into the CodeBuild console, to override or replace buildspec.yml.</p>
+<h3 id="cloudformation">CloudFormation</h3>
+<p>A service that allows you to provision AWS infrastructure as code.</p>
+<p>Resources are defined using a CloudFormation template (both YAML and JSON are supported).</p>
+<p>Benefits:</p>
+<ul>
+<li>Configure infrastructure in a really consistent way</li>
+<li>Less time and effort than configuring things manually</li>
+<li>You can version control and peer review your templates</li>
+<li>Free to use (you are charged for what you create)</li>
+<li>Can be used to manage + update dependencies</li>
+<li>Can be used to roll back and delete the entire stack as well (handy if you are just doing testing)</li>
+</ul>
+<h4 id="cloudformation-template-format">CloudFormation Template Format</h4>
+<p>Template parameters include:</p>
+<ul>
+<li>AWSTemplateFormatVersion
+<ul>
+<li>This is the first line in your template</li>
+<li>Only ONE supported value: &quot;2010-09-09&quot;</li>
+</ul></li>
+<li>Outputs
+<ul>
+<li>Lets you define output data (such as EC2 instance IDs) which will be printed by your script when it finishes running</li>
+</ul></li>
+</ul>
+<p>You can store reusable pieces of YAML and JSON code in S3, and can reuse them from within CloudFormation.</p>
+<h4 id="stuff-to-remember">Stuff to remember</h4>
+<p>Remember the main sections in the CloudFormation template:</p>
+<ul>
+<li>Parameters: Input custom values</li>
+<li>Conditions: Provision resources based on environment</li>
+<li>Resources: AWS resources to create</li>
+<li>Mappings: Create custom mappings like region-&gt;AMI</li>
+<li>Transforms: reference code located in S3</li>
+</ul>
+<h4 id="introduction-to-sam">Introduction to SAM</h4>
+<p>SAM = Serverless Application Model</p>
+<p>Has its own CLI interface called the SAM CLI. You get several commands:</p>
+<ul>
+<li>sam package: takes a template (YAML) as input to package a deployment</li>
+<li>sam deploy: takes the sam template and an IAM role, which allows CloudFormation to create an IAM role to allow the function to execute</li>
+</ul>
+<h4 id="exam-tips-8">Exam Tips</h4>
+<p>Know that SAM is the Serverless Application Model and it is an extension to CloudFormation to allow you to deploy serverless applications.</p>
+<h4 id="cloudformation-nested-stacks">CloudFormation Nested Stacks</h4>
+<p>Allow you to re-use nested stack elements (say for a load balancer or web application server group).</p>
+<p>You can store these common elements in their own CloudFormation templates, then reference them from other CloudFormation templates.</p>
+<h3 id="developer-theory-summary">Developer Theory Summary</h3>
+<p>CI/CD and related tools are worth a few exam points: read the AWS whitepapers on the subject:</p>
+<ul>
+<li><a href="https://d0.awsstatic.com/whitepapers/DevOps/practicing-continuous-integration-continuous-delivery-on-AWS.pdf">Developer Theory Whitepaper</a></li>
+<li><a href="https://d1.awsstatic.com/whitepapers/AWS_Blue_Green_Deployments.pdf">Blue/Green deployment</a></li>
+</ul>
+<p>Other things to know:</p>
+<ul>
+<li>CI is about automating the process of merging changes into a code base</li>
+<li>CD is about automating build, test, and deploy parts of the release lifecycle</li>
+<li>Continuous Deployment fully automates the release process as well (as opposed to Continuous Delivery)</li>
+</ul>
+<p>AWS tools to know:</p>
+<ul>
+<li>AWS CodeCommit</li>
+<li>AWS CodeBuild</li>
+<li>AWS CodeDeploy</li>
+<li>AWS CodePipeline</li>
+</ul>
+<p>AWS CodeCommit:</p>
+<ul>
+<li>Based on Git</li>
+<li>Tracks and manages code changes</li>
+</ul>
+<p>AWS CodeDeploy:</p>
+<ul>
+<li>Automated deployment of code (can be triggered by changes in CodeCommit)</li>
+<li>Two deployment types: in-place (rolling update) or Blue/Green</li>
+</ul>
+<p>The AppSpec file defines all the parameters needed for deployment.</p>
+<p>For EC2/On-premises systems, the appspec.yml file must be placed in the root directory of your application revision.</p>
+<p>Try to remember the RUN ORDER of the hooks in the CodeDeploy deployment:</p>
+<ul>
+<li>Phase 1:
+<ul>
+<li>BeforeBlockTraffic -&gt; Block Traffic -&gt; AfterBlockTraffic</li>
+</ul></li>
+<li>Phase 2:
+<ul>
+<li>Application Stop</li>
+<li>BeforeInstall</li>
+<li>Install</li>
+<li>AfterInstall</li>
+<li>ApplicationStart</li>
+<li>ValidateService</li>
+</ul></li>
+<li>Phase III:
+<ul>
+<li>ApplicationStart</li>
+<li>ValidateService</li>
+<li>BeforeAllowTraffic -&gt; AllowTraffic -&gt; AfterAllowTraffic</li>
+</ul></li>
+</ul>
+<h3 id="aws-codepipeline-exam-tips">AWS CodePipeline Exam Tips:</h3>
+<p>CodePipeline is a CI/CD service. It automates your end-to-end release process based on a user-defined workflow.</p>
+<p>It can be configured to automatically trigger your pipeline as soon as a change is detected in your source code repository.</p>
+<h3 id="docker-and-codebuild-exam-tips">Docker and CodeBuild Exam Tips</h3>
+<p>Docker lets you package your software into containers which you can run via AWS ECS.</p>
+<p>A docker container includes everything the software needs to run including code, libraries, runtime and environment variables.</p>
+<p>A Dockerfile specifies the instructions needed to assemble your docker image.</p>
+<p>There are some docker commands you should know to build, tag, and push images to an ECR repository:</p>
+<ul>
+<li><code>docker build -t myimagerepo .</code></li>
+<li><code>docker tag myimagerepo:latest &lt;image tag&gt;</code></li>
+<li><code>docker push &lt;image tag&gt;</code></li>
+</ul>
+<h3 id="codebuild-exam-tips">CodeBuild Exam Tips</h3>
+<p>A fully managed build service. It can build source code, run tests, and produce software packages based on commands that you define yourself.</p>
+<p>By default the buildspec.yml defines the build commands and settings used by CodeBuild to run your build</p>
+<p>You can override the buildspec.yml by adding your own build commands in the console when you launch the build</p>
+<p>If your build fails, check the build logs as they appear at the bottom of the CodeBuild console (or view the full build logs in CloudWatch)</p>
+<h2 id="web-identity-federation">Web Identity Federation</h2>
+<p>You can allow sign-in and temporary access to AWS resources via Facebook, Google, or Amazon.</p>
+<p>Amazon Cognito service provides this type of identity federation, plus:</p>
+<ul>
+<li>Access for guest users</li>
+<li>Sign in and sign up</li>
+<li>Acts as an identity broker between your application and web ID providers</li>
+<li>Synchronizes user data for multiple devices</li>
+<li>Recommended for all mobile applications accessing AWS services</li>
+</ul>
+<p>Cognito means applications don't need to embed or store AWS credentials locally, and users get a seamless experience across all mobile devices.</p>
+<h3 id="cognito-user-pools">Cognito User Pools</h3>
+<ul>
+<li>User directories used to manage sign-up and sign-in functionality for mobile and web applications.</li>
+<li>Successful authentication generates a number of JSON Web tokens (JWTs).</li>
+<li>Cognito tracks the association between user identity and various devices they sign in front.</li>
+</ul>
+<p>To provide a seamless experience, Cognito uses push synchronization to push updates and synchronize user data across multiple devices.</p>
+<p>SNS is used to send a silent push notification to all devices with a given user identity, whenever data stored in the cloud changes.</p>
+<h3 id="advanced-iam-policies">Advanced IAM Policies</h3>
+<p>There are 3 types of policies:</p>
+<ul>
+<li>Managed policies</li>
+<li>Customer managed policies</li>
+<li>Inline policies</li>
+</ul>
+<h4 id="managed-policy">Managed Policy</h4>
+<p>An IAM policy created and administered by AWS. Provided for common use cases based on job function (DynamoDB Full Access, EC2 Read Only, etc).</p>
+<p>A single managed policy can be attached to multiple users, groups, or roles.</p>
+<p>You <em>cannot</em> change the permissions which are part of AWS managed policies.</p>
+<h4 id="customer-managed-policy">Customer Managed Policy</h4>
+<p>Can be attached to multiple users, groups, and roles, but only within your own account. Created and administered by <em>you</em>.</p>
+<p>Recommended for cases where existing policies don't quite meet your needs.</p>
+<h4 id="inline-policy">Inline Policy</h4>
+<p>An inline policy is an IAM policy which is actually embedded within the user, group, or role to which it applies.</p>
+<p>Cannot be attached to multiple users, groups, or roles.</p>
+<p><strong>If you delete the user/group/role the policy is embedded in, then the policy will be deleted.</strong></p>
+<p>Typically Managed Policies are recommended, but in certain cases where you need to ensure a policy applies to <strong>NO ONE ELSE</strong> except a specific user/group, or role, then these are useful.</p>
+<h3 id="stsassumerolewithwebidentity">STS:AssumeRoleWithWebIdentity</h3>
+<p>This is what Cognito uses &quot;under the hood&quot; to authenticate clients who have already authenticated with a third party like Facebook, Google, or (of course) Amazon.</p>
+<p>Once these services provide a JWT token, STS can exchange the JWT token for an STS token using the <code>AssumeRoleWithWebIdentity</code> API call.</p>
+<p>Typically for mobile applications, AWS recommends you use Cognito. However, you can also directly use <code>AssumeRoleWithWebIdentity</code> in regular web applications.</p>
+<h3 id="cross-account-access">Cross Account Access</h3>
+<p>Lets you &quot;switch role&quot; from one account to another inside the AWS console, without logging out and logging back in (uses the &quot;assume role&quot; functionality).</p>
+<p>Steps:</p>
+<ul>
+<li>Identify your account numbers</li>
+<li>Create a group in IAM called &quot;Dev&quot;</li>
+<li>Create a user in IAM called &quot;Dev&quot;</li>
+<li>Log in to &quot;Production&quot;</li>
+<li>Create the &quot;read-write-app-bucket&quot; policy</li>
+<li>Create the &quot;UpdateApp&quot; Cross Account Role</li>
+<li>Apply the newly created policy to the role</li>
+<li>Log in to the Developer Account</li>
+<li>Create a new inline policy</li>
+<li>Apply it to the Developer group</li>
+<li>Log in as &quot;John (dev user)&quot;</li>
+<li>Switch accounts</li>
+</ul>
+<h3 id="advanced-iam-summary">Advanced IAM Summary</h3>
+<ul>
+<li>Federation allows users to authenticate with a Web Identity Provider (Google, Facebook, Amazon).</li>
+<li><p>The user first authenticates w/ the web ID provider, they then receive an authentication token which is exchanged for temporary IAM credentials</p></li>
+<li>Cognito is an identity broker which handles interaction between your applications and the Web ID provider (you don't need to write your own code to do this)
+<ul>
+<li>Provides sign-up, sign-in and guest user access</li>
+<li>Syncs user data for a seamless experience across devices</li>
+</ul></li>
+<li><p>Cognito uses Push Synchronization to send a silent push notification of user data updates to multiple devices associated with a user ID</p></li>
+</ul>
+<p>Remember the 3 types of IAM policies:</p>
+<ul>
+<li>Managed Policy</li>
+<li>Customer Managed Policy</li>
+<li>Inline Policy</li>
+</ul>
+<p>In most cases, AWS recommends using Managed Policies over Inline Policies</p>
+<h2 id="cloudwatch">CloudWatch</h2>
+<p>Can monitor all kinds of things:</p>
+<ul>
+<li>Storage gateway</li>
+<li>CloudFront</li>
+<li>DB and Analytics</li>
+<li>RDS Instances</li>
+<li>EMR Job Flows</li>
+<li>Redshift</li>
+<li>SNS Topics</li>
+<li>OpsWorks</li>
+<li>Estimated charges on bills</li>
+</ul>
+<p>And more!</p>
+<p>Things CloudWatch monitors by default on EC2:</p>
+<ul>
+<li>CPU</li>
+<li>Network</li>
+<li>Disk</li>
+<li>Status Check</li>
+</ul>
+<p>These are called &quot;host level metrics&quot;.</p>
+<p><strong>Exam tip: RAM utilization is a custom metric! EC2 monitoring is on a 5 minute interval unless you enable detailed monitoring (1 minute intervals) which costs money</strong></p>
+<p>How long are CloudWatch metric stored? By default log data is stored <em>indefinitely</em>.</p>
+<p>You can retrieve data using 3rd party tools or the <code>GetMetricStatistics</code> API</p>
+<p>Metric granularity <em>depends on the AWS service</em>. It could be 1 minute, 3 minutes, or 5 minutes depending on the service.</p>
+<p>Custom metric <em>minimum granularity</em> is one minute.</p>
+<h3 id="alarms">Alarms</h3>
+<p>You can create alarms to monitor any CloudWatch metrics in your account. This can include EC2 CPU Utilization, Elastic Load Balancer Latency, or even charges on your AWS bill.</p>
+<p>Note: CloudWatch <strong>can be used on premises</strong>: it is not limited to just AWS resources. There is a CloudWatch Agent + SSM Agent which you can download and install.</p>
+<h3 id="exam-tips-9">Exam Tips</h3>
+<p>Host level metrics are:</p>
+<ul>
+<li>CPU</li>
+<li>Network</li>
+<li>Disk</li>
+<li>Status Check</li>
+</ul>
+<h3 id="cloudwatch-vs-cloudtrail-vs-config">CloudWatch vs CloudTrail vs Config</h3>
+<ul>
+<li>CloudWatch monitors performance (CPU, RAM, etc...)</li>
+<li>CloudTrail monitors API calls (provisioning a new EC2 instance, new S3 bucket, tracks who-what-when)</li>
+<li>AWS Config records the state of your AWS environment and can notify you of changes</li>
+</ul>
+<h1 id="stuff-i-got-wrong-during-practice-exams">Stuff I Got Wrong During Practice Exams</h1>
+<h2 id="monitoring-and-troubleshooting">Monitoring and Troubleshooting</h2>
+<ul>
+<li>Lambda max execution time is 900 seconds</li>
+<li>For questions about &quot;sticky sessions&quot; and storing the session data, choose <em>ElastiCache</em></li>
+<li>X-Ray works with ECS, Elastic Beanstalk, Lambda, EC2 (NOT S3)</li>
+</ul>
+<h2 id="deployment">Deployment</h2>
+<ul>
+<li>SQS queue maximum retention time: 14 days</li>
+<li>Multi-part uploads are recommended for files over 100 MB</li>
+<li>OrderDate would make a good sort key in DynamoDB (why? will make it easy to query later: sorts + queries are the job of the sort key)</li>
+<li>If you need to roll back a lambda function, point the PROD alias to an older version of your function (you cannot change $LATEST)</li>
+</ul>
+<h3 id="cloudformation-1">CloudFormation</h3>
+<h4 id="get-the-dns-name-of-a-loadbalancer-using-cloudformation-code">Get the DNS name of a LoadBalancer using CloudFormation code</h4>
+<p><code>Fn::Join&quot; : [ &quot;&quot;, [ &quot;http://&quot;, { &quot;Fn::GetAtt&quot; : [ &quot;ElasticLoadBalancer&quot;, &quot;DNSName&quot; ]}]]</code></p>
+<h4 id="what-will-you-see-if-your-cloudformation-stack-encounters-an-error">What will you see if your CloudFormation stack encounters an error?</h4>
+<p>ROLLBACK_IN_PROGRESS</p>
+<h4 id="when-will-a-template-not-roll-back">When will a template NOT roll back?</h4>
+<p>When there is invalid JSON syntax in the template.</p>
+<h4 id="choosing-different-instance-types-based-on-environment-type">Choosing different instance types based on environment type</h4>
+<p>This can be achieved in your CloudFormation template via:</p>
+<ul>
+<li>Conditions</li>
+<li>Mappings</li>
+</ul>
+<h3 id="codecommit">CodeCommit</h3>
+<p>To receive an email when changes are pushed, you must:</p>
+<ul>
+<li>Configure notifications in the console (this auto-creates an SNS topic which triggers emails to be sent out)</li>
+</ul>
+<h2 id="development-with-aws-services">Development with AWS Services</h2>
+<ul>
+<li>Elastic Beanstalk supports Tomcat, Docker, and Passenger but <strong>not JBoss</strong></li>
+<li>appspec.yml goes in the root of your applicatoin source, <strong>not the .ebextensions folder</strong></li>
+<li>Session state can go in <em>DynamoDB</em> or <em>ElastiCache</em>: RDS and EC2 are poorer choices, and Lambda functions can't store data</li>
+</ul>
+<h3 id="kinesis-2">Kinesis</h3>
+<p>Records a processed by consumers according to the <strong>sequence number</strong> assigned when items are written to the stream</p>
+<h3 id="lambda-1">Lambda</h3>
+<p><strong>RDS is not an event source for Lambda!</strong></p>
+<h3 id="dynamodb-1">DynamoDB</h3>
+<ul>
+<li>You can list tables using <code>ListTables</code></li>
+<li>DynamoDB uses <strong>optimistic concurrency control</strong></li>
+<li><p>Items in a DynamoDB table can have an unlimited number of attributes</p></li>
+<li><p><strong>DynamoDB Streams</strong> allows you to capture a time-ordered sequence of modifications to items in a DynamoDB table over the past 24 hours</p></li>
+</ul>
+<h3 id="sqs-2">SQS</h3>
+<p>The API can return a status code 400 for each of these errors:</p>
+<ul>
+<li>MissingParameter</li>
+<li>MissingAction</li>
+</ul>
+<h4 id="dealing-with-messages-which-are-bigger-than-the-sqs-message-maximum">Dealing with messages which are bigger than the SQS message maximum</h4>
+<p>The way to handle this is to use the SQS Extended Client Library to send an SQS message which references a message body in S3.</p>
+<h4 id="billing">Billing</h4>
+<p>Message size maximum is 256 KB but <strong>messages are billed at 64 KB increments</strong>.</p>
+<h3 id="swf">SWF</h3>
+<ul>
+<li>EC2 instances can perform a worker task</li>
+<li>A server living outside AWS can perform a worker task</li>
+<li>Decision tasks occur when the state of the workflow changes</li>
+</ul>
+<h2 id="refactoring">Refactoring</h2>
+<ul>
+<li>RDS and ElastiCache are both OK places to store session state, but locally in memory or on EC2 are poor choices</li>
+</ul>
+<h2 id="security">Security</h2>
+<ul>
+<li>Cognito sign up and sign in is managed by <strong>user pools</strong></li>
+<li>CloudFront can force HTTPS by setting the <strong>Viewer Protocol Policy</strong></li>
+<li>When deploying with Elastic Beanstalk, you need to create a security group allowing access to your RDS DB and add it to the auto-scaling group: your app also needs to know the DB connection string</li>
+<li><strong>Again: sign up and sign in for Cognito are handled by the user pool</strong></li>
+</ul>

@@ -21,7 +21,7 @@ Yes! Here are links to PDF versions of my notes, which I created using Node's "m
 - Alibaba Cloud
     - Coming soon!
 - Amazon AWS:
-    - AWS Developer Associate in [PDF format](https://s3.amazonaws.com/cloudcertnotes/aws_certified_developer_associate.pdf) and [HTML format](https://s3.amazonaws.com/cloudcertnotes/aws_certified_developer_associate.html)
+    - AWS Developer Associate in [PDF format](aws/aws_certified_developer_associate.pdf) and [HTML format](aws/aws_certified_developer_associate.html)
 - Microsoft Azure:
     - Coming soon!
 - Google Cloud Platform
